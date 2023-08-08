@@ -8,14 +8,15 @@
 import Foundation
 
 class Converter {
-    private var codePoint: UInt32?
-    private var numBytes: Int
-    private var codePlane: Int
     private let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEF")
     private let fourBytes = 0x10000...0x10FFFF
     private let threeBytes = 0x0800...0xFFFF
     private let twoBytes = 0x0080...0x07FF
     private let oneByte = 0x0000...0x007F
+    private var codePoint: UInt32?
+    private var numBytes: Int
+    private var codePlane: Int
+    private var encodedChar: Unicode.Scalar?
     
     init() {
         codePoint = 0; numBytes = 0; codePlane = 0
@@ -29,15 +30,23 @@ class Converter {
         numBytes = 0; codePlane = 0 // TODO: replace filler
     }
     
-    func set_utf8(_ codePoint: String) -> Void {
+    func setCodePoint(_ codePoint: String) -> Void {
         let validRange = 1...6 ~= codePoint.count
         let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
-    
+        
         guard (allHex && validRange) else {
             return
         }
         
         self.codePoint = UInt32(codePoint, radix: 16)
+        setChar()
+        setCodePlane()
+        // TODO: replace temp code of setting char with utf conversions
+        
+    }
+    
+    func set_utf8(_ codePoint: String) -> Void {
+            
     }
     
     func set_utf16(_ codePoint: String) -> Void {
@@ -45,15 +54,22 @@ class Converter {
         return
     }
     
-    func genChar() {
-        
+    func getChar() -> Unicode.Scalar {
+        return encodedChar!
     }
     
-    private func calculateCodePlane(_ codePoint: UInt32) -> Void {
-        let planeBits = codePoint >> 16
-        codePlane = Int(planeBits == 0 ? planeBits : 0x00)
+    private func setChar() -> Void {
+        if let codePoint = codePoint {
+            encodedChar = Unicode.Scalar(codePoint)
+        }
+        return
     }
     
-    
-    
+    private func setCodePlane() -> Void {
+        if let codePoint = codePoint {
+            let planeBits = codePoint >> 16
+            codePlane = Int(planeBits)
+        }
+        return
+    }
 }

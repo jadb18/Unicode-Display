@@ -9,26 +9,26 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var codePoint: String
-    @State private var displayChar: Character.UnicodeScalarLiteralType?
+    @State private var displayChar: Character
     private let converter = Converter()
     
     
     init() {
         self.codePoint = ""
-//        self.displayChar = "\u{000a}"
+        self.displayChar = " "
     }
     
     var body: some View {
         VStack {
-//            CharacterView(displayChar)
-            Text(String(displayChar ?? " "))
+            Text(String(displayChar))
                 .font(.system(size: 144))
             LabeledContent {
             TextField("Code Point", text: $codePoint)
             .frame(minWidth: 100, maxWidth: 100)
             .onChange(of: codePoint) {
+                converter.setCodePoint(codePoint)
+                displayChar = Character(converter.getChar())
 //                Converter("utf-8", codePoint)
-//                displayChar =
             }
             } label: {
                 Text("U+")
