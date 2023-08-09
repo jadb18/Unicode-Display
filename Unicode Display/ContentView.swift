@@ -22,18 +22,19 @@ struct ContentView: View {
         VStack {
             Text(String(displayChar))
                 .font(.system(size: 144))
-            LabeledContent {
-            TextField("Code Point", text: $codePoint)
-            .frame(minWidth: 100, maxWidth: 100)
-            .onChange(of: codePoint) {
-                converter.setCodePoint(codePoint)
-                displayChar = Character(converter.getChar())
-//                Converter("utf-8", codePoint)
+            VStack {
+                LabeledContent {
+                    TextField("Code Point", text: $codePoint)
+                        .frame(minWidth: 100, maxWidth: 100)
+                        .onChange(of: codePoint) {
+                            converter.setCodePoint(codePoint)
+                            displayChar = Character(converter.getChar())
+                            //                Converter("utf-8", codePoint)
+                        }
+                } label: {
+                    Text("U+")
+                }
             }
-            } label: {
-                Text("U+")
-            }
-            
         }
         .frame(minWidth: 500, maxWidth: 1280, minHeight: 500, maxHeight: 720)
     }

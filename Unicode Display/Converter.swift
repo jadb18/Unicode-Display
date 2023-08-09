@@ -30,6 +30,9 @@ class Converter {
         numBytes = 0; codePlane = 0 // TODO: replace filler
     }
     
+    /// Sets the converter's `codePoint` to the input , checks for valid hex code and length
+    /// - Parameter codePoint: An input codepoint intended to be received from user input
+    /// - Returns: no return value
     func setCodePoint(_ codePoint: String) -> Void {
         let validRange = 1...6 ~= codePoint.count
         let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
@@ -58,13 +61,16 @@ class Converter {
         return encodedChar!
     }
     
+    /// Sets the member `encodedChar` to a Unicide.Scalar, (presumably) simulating valid UTF encoding
+    /// - Returns: no return value
     private func setChar() -> Void {
         if let codePoint = codePoint {
             encodedChar = Unicode.Scalar(codePoint)
         }
-        return
     }
     
+    /// Calculates the code plane from the member code point, not currently used but for inspection purposes
+    /// - Returns: no return value
     private func setCodePlane() -> Void {
         if let codePoint = codePoint {
             let planeBits = codePoint >> 16
