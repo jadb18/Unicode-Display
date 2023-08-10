@@ -13,6 +13,7 @@
 		05328DC62A80B7D40041CA49 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05328DC52A80B7D40041CA49 /* Preview Assets.xcassets */; };
 		054779A92A84BFAE00A38C4C /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 054779A72A84BFAE00A38C4C /* Resources */; };
 		054779AA2A84BFAE00A38C4C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 054779A82A84BFAE00A38C4C /* README.md */; };
+		054779AC2A84C2B200A38C4C /* ConverterHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054779AB2A84C2B200A38C4C /* ConverterHelpers.swift */; };
 		05E9BA722A80B8A9000B4EE8 /* calculate.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E9BA712A80B8A9000B4EE8 /* calculate.c */; };
 		05E9BA742A8112C5000B4EE8 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E9BA732A8112C5000B4EE8 /* Converter.swift */; };
 /* End PBXBuildFile section */
@@ -26,6 +27,7 @@
 		05328DC72A80B7D40041CA49 /* Unicode_Display.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Unicode_Display.entitlements; sourceTree = "<group>"; };
 		054779A72A84BFAE00A38C4C /* Resources */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Resources; sourceTree = SOURCE_ROOT; };
 		054779A82A84BFAE00A38C4C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		054779AB2A84C2B200A38C4C /* ConverterHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConverterHelpers.swift; sourceTree = "<group>"; };
 		05E9BA6F2A80B8A8000B4EE8 /* Unicode Display-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Unicode Display-Bridging-Header.h"; sourceTree = "<group>"; };
 		05E9BA702A80B8A9000B4EE8 /* calculate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = calculate.h; sourceTree = "<group>"; };
 		05E9BA712A80B8A9000B4EE8 /* calculate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = calculate.c; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				05328DBE2A80B7D20041CA49 /* Unicode_DisplayApp.swift */,
 				05328DC02A80B7D20041CA49 /* ContentView.swift */,
 				05E9BA732A8112C5000B4EE8 /* Converter.swift */,
+				054779AB2A84C2B200A38C4C /* ConverterHelpers.swift */,
 				05E9BA702A80B8A9000B4EE8 /* calculate.h */,
 				05E9BA712A80B8A9000B4EE8 /* calculate.c */,
 				054779A82A84BFAE00A38C4C /* README.md */,
@@ -159,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05328DC12A80B7D20041CA49 /* ContentView.swift in Sources */,
+				054779AC2A84C2B200A38C4C /* ConverterHelpers.swift in Sources */,
 				05E9BA722A80B8A9000B4EE8 /* calculate.c in Sources */,
 				05E9BA742A8112C5000B4EE8 /* Converter.swift in Sources */,
 				05328DBF2A80B7D20041CA49 /* Unicode_DisplayApp.swift in Sources */,
