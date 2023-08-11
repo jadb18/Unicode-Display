@@ -10,8 +10,8 @@ import SwiftUI
 struct ContentView: View {
     @State private var codePoint: String
     @State private var displayChar: Character
-    @State private var utf8: Int
     @State private var numBytes: Int
+    @State private var utf8: UInt32
     private let converter = Converter()
     
     init() {
@@ -40,7 +40,7 @@ struct ContentView: View {
                 } label: {
                     Text("U+")
                 }
-                Text("UTF-8: " + String(utf8))
+                Text("UTF-8: " + String(utf8, radix: 16) + String(Unicode.Scalar(utf8) ?? " "))
                 Text("UTF-16: ")
                 Text("Bytes: " + String(numBytes))
             }

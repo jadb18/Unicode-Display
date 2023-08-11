@@ -12,19 +12,8 @@ struct utf8 {
 }
 
 class Converter {
-    private let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEF")
-    private let fourBytes: ClosedRange<UInt32> = 0x10000...0x10FFFF
-    private let threeBytes: ClosedRange<UInt32> = 0x0800...0xFFFF
-    private let twoBytes: ClosedRange<UInt32> = 0x0080...0x07FF
-    private let oneByte: ClosedRange<UInt32> = 0x0000...0x007F
-    
-    private var byte1: UInt8 = 0b1111_0000
-    private var byte2: UInt8 = 0b1000_0000
-    private var byte3: UInt8 = 0b1000_0000
-    private var byte4: UInt8 = 0b1000_0000
-    var bytesUsed = 0
-    
-    private var utf8 = 0
+    private var bytesUsed = 0
+    private var utf8: UInt32 = 0
     private var utf16: UInt32 = 0
     private var codePoint: UInt32 = 0
     private var codePlane: Int = 0
@@ -41,19 +30,15 @@ class Converter {
     /// - Parameter codePoint: An input codepoint intended to be received from user input
     /// - Returns: no return value
     func setCodePoint(_ codePoint: String) -> Void {
-        let controlCharEnd: UInt32 = 0x0
+//        let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEF")
+//        let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
+        let controlCharEnd: UInt32 = 0x20
         let lastCodePoint: UInt32 = 0x10FFFF
         let pointRange: ClosedRange<UInt32> = controlCharEnd...lastCodePoint
-        let validLength = 2...6 ~= codePoint.count // FIXME: Check for max 0x10FFFF
-        let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
         
-        guard (allHex && validLength) else {
-            return
-        }
-        
-        // Sanity check that the codePoint string can indeed become a hex number
+        // Check that the codePoint string can become a hex number/only contains hex characters
         if let codeHex = UInt32(codePoint, radix: 16) {
-            // Ensure that the hex number is in a valid point range of Unicode characters
+            // Check that the hex number is in a valid point range of displayable Unicode characters
             if pointRange.contains(codeHex) {
                 self.codePoint = codeHex
                 set_utf8()
@@ -61,42 +46,45 @@ class Converter {
                 setCodePlane()
             }
         }
-        
-        
-        // TODO: replace temp code of setting char with utf conversions
-        
     }
     
     func set_utf8() -> Void {
+        let fourBytes: ClosedRange<UInt32> = 0x10000...0x10FFFF
+        let threeBytes: ClosedRange<UInt32> = 0x0800...0xFFFF
+        let twoBytes: ClosedRange<UInt32> = 0x0080...0x07FF
+        let oneByte: ClosedRange<UInt32> = 0x0000...0x007F
+        let continuationByte: UInt8 = 0b1000_0000
+        
         utf8 = 0
         
         if fourBytes.contains(codePoint) {
             bytesUsed = 4
-//            let utf8 = UInt32(codePoint)
+            let byte1 = (0b111_10000 + UInt8(codePoint >> 18))
+            let byte2 = (continuationByte + UInt8((codePoint & 0x3FFF) >> 12))
+            let byte3 = (continuationByte + UInt8((codePoint & 0x3FF) >> 6))
+            let byte4 = (continuationByte + UInt8(codePoint & 0x3F))
+            // TODO: clean implementation?
+            
+            utf8 = UInt32(byte1) << 24 + UInt32(byte2) << 16 + UInt32(byte3) << 8 + UInt32(byte4)
             
         } else if threeBytes.contains(codePoint)  {
             bytesUsed = 3
         } else if twoBytes.contains(codePoint) {
             bytesUsed = 2
             let bytes = split16BitNum(UInt16(codePoint))
-            let block1Bits = (bytes.0 << 3) + (bytes.1 >> 6)
-            let block2Bits = bytes.1 ^ 0x3F
-//            byte1 = 0b1100_0000 + bytes.0 >> (UInt8.bitWidth - block1Bits)
-            byte1 += block1Bits
-            byte2 += block2Bits
-            utf8 += Int(byte1)
-            utf8 <<= UInt8.bitWidth
-            utf8 += Int(byte2)
+            let byte1 = (bytes.0 << 3) + (bytes.1 >> 6)
+            let byte2 = bytes.1 & 0x3F
+            utf8 += UInt32(0b1100_0000 + byte1) << UInt8.bitWidth
+            utf8 += UInt32(continuationByte + byte2)
         } else if oneByte.contains(codePoint) {
             bytesUsed = 1
-            byte1 = 0b1000_0000 + UInt8(codePoint)
-            utf8 += Int(byte1)
+            utf8 = UInt32(0b1000_0000 + UInt8(codePoint))
         } else {
             print("Invalid code point: \(codePoint)")
         }
     }
     
-    func get_utf8() -> Int {
+    func get_utf8() -> UInt32 {
         return utf8
     }
     

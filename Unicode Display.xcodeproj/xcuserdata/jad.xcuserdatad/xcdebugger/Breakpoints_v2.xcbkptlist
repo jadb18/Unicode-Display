@@ -23,22 +23,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AEEE85FE-698C-4297-BFF3-0254D9CBE75B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Unicode Display/Converter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
-            landmarkName = "set_utf8()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "E7D89583-6576-4E83-8977-167B23191850"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -46,8 +30,8 @@
             filePath = "Unicode Display/Converter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "setCodePoint(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -167,17 +151,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "333116C9-9D89-4971-9094-410EB07B7573"
+            uuid = "AC47FA21-FEB8-4716-BA06-043598EBA7F8"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Unicode Display/Converter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
             landmarkName = "set_utf8()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AC47FA21-FEB8-4716-BA06-043598EBA7F8 - be4cf969d1ba37e5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Unicode_Display.Converter.set_utf8() -&gt; ()"
+                  moduleName = "Unicode Display"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jad/Developer/Unicode%20Display/Unicode%20Display/Converter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "77"
+                  endingLineNumber = "77"
+                  offsetFromSymbolStart = "4768">
+               </Location>
+               <Location
+                  uuid = "AC47FA21-FEB8-4716-BA06-043598EBA7F8 - be4cf969d1ba37e5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Unicode_Display.Converter.set_utf8() -&gt; ()"
+                  moduleName = "Unicode Display"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jad/Developer/Unicode%20Display/Unicode%20Display/Converter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "77"
+                  endingLineNumber = "77"
+                  offsetFromSymbolStart = "4924">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
