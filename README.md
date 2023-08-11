@@ -7,9 +7,9 @@ This project accepts entry of a Unicode code point and displays the relavent cha
 Intended to work with UTF-8 and UTF-16 encodings. I hope to be able to add ability to input a 
 character literal and display the code point and encodings as well.
 
-Example usage (relatively current state of program):
+Example usage (relatively current state of the program):
 
-![Program screenshot displaying the Chinese character *biang* followed by four text fields, input of U+30EDD, UTF-8: f0808b9d, UTF-16: blank, and Bytes: 4](Resources/U+30EDD Sample.png)
+![Program screenshot displaying the Chinese character *biang* followed by four text fields, input of U+30EDD, UTF-8: f0808b9d, UTF-16: blank, and Bytes: 4](/Resources/U+30EDD%20Sample.png)
 
 ### Crashes discovered so far
 - Attempting to use dictation in the text field causes a crash
