@@ -16,7 +16,7 @@ class Converter {
     
     private var utf8: UInt32 = 0
     private var utf16: UInt32 = 0
-    private var codePoint: UInt32?
+    private var codePoint: UInt32
     private var numBytes: Int
     private var codePlane: Int
     private var encodedChar: Unicode.Scalar?
@@ -34,16 +34,27 @@ class Converter {
     /// - Parameter codePoint: An input codepoint intended to be received from user input
     /// - Returns: no return value
     func setCodePoint(_ codePoint: String) -> Void {
-        let validRange = 1...5 ~= codePoint.count // FIXME: Check for max 0x10FFFF
+        let controlCharEnd: UInt32 = 0x20
+        let lastCodePoint: UInt32 = 0x10FFFF
+        let pointRange: ClosedRange<UInt32> = controlCharEnd...lastCodePoint
+        let validLength = 2...6 ~= codePoint.count // FIXME: Check for max 0x10FFFF
         let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
         
-        guard (allHex && validRange) else {
+        guard (allHex && validLength) else {
             return
         }
         
-        self.codePoint = UInt32(codePoint, radix: 16)
-        setChar()
-        setCodePlane()
+        // Sanity check that the codePoint string can indeed become a hex number
+        if let codeHex = UInt32(codePoint, radix: 16) {
+            // Ensure that the hex number is in a valid point range of Unicode characters
+            if pointRange.contains(codeHex) {
+                self.codePoint = codeHex
+                setChar()
+                setCodePlane()
+            }
+        }
+        
+        
         // TODO: replace temp code of setting char with utf conversions
         
     }
@@ -54,7 +65,7 @@ class Converter {
         var byte3: UInt8
         var byte4: UInt8
         
-        let codePoint = self.codePoint!
+        let codePoint = self.codePoint
         
         if fourBytes.contains(codePoint) {
             let utf8 = UInt32(codePoint)
@@ -93,25 +104,23 @@ class Converter {
         return
     }
     
-    func getChar() -> Unicode.Scalar {
-        return encodedChar!
+    func getChar() -> Unicode.Scalar? {
+        return encodedChar
     }
     
     /// Sets the member `encodedChar` to a Unicide.Scalar, (presumably) simulating valid UTF encoding
     /// - Returns: no return value
     private func setChar() -> Void {
-        if let codePoint = codePoint {
-            encodedChar = Unicode.Scalar(codePoint)
-        }
+        encodedChar = Unicode.Scalar(codePoint)
+        return
     }
     
     /// Calculates the code plane from the member code point, not currently used but for inspection purposes
     /// - Returns: no return value
     private func setCodePlane() -> Void {
-        if let codePoint = codePoint {
-            let planeBits = codePoint >> 16
-            codePlane = Int(planeBits)
-        }
+        let planeBits = codePoint >> 16
+        codePlane = Int(planeBits)
+        
         return
     }
 }
