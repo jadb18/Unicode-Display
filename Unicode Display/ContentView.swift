@@ -10,11 +10,15 @@ import SwiftUI
 struct ContentView: View {
     @State private var codePoint: String
     @State private var displayChar: Character
+    @State private var utf8: Int
+    @State private var numBytes: Int
     private let converter = Converter()
     
     init() {
         self.codePoint = ""
         self.displayChar = " "
+        self.utf8 = 0
+        self.numBytes = 0
     }
     
     var body: some View {
@@ -25,15 +29,20 @@ struct ContentView: View {
                 LabeledContent {
                     let maxLength = 6
                     TextField("Code Point", text: $codePoint)
-                        .limitTextLength($codePoint, to: 6)
+                        .limitTextLength($codePoint, to: maxLength)
                         .frame(minWidth: 100, maxWidth: 100)
                         .onChange(of: codePoint) {
                             converter.setCodePoint(codePoint)
                             displayChar = Character(converter.getChar() ?? " ")
+                            utf8 = converter.get_utf8()
+                            numBytes = converter.getBytesUsed()
                         }
                 } label: {
                     Text("U+")
                 }
+                Text("UTF-8: " + String(utf8))
+                Text("UTF-16: ")
+                Text("Bytes: " + String(numBytes))
             }
         }
         .frame(minWidth: 500, maxWidth: 1280, minHeight: 500, maxHeight: 720)

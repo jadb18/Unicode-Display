@@ -8,4 +8,4 @@ Intended to work with UTF-8 and UTF-16 encodings. I hope to be able to add abili
 character literal and display the code point and encodings as well.
 
 ### Crashes discovered so far
-- Dictation
+- Activating dictation in the text field causes a crash
