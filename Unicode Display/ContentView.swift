@@ -8,18 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var codePoint: String
-    @State private var displayChar: Character
-    @State private var numBytes: Int
-    @State private var utf8: UInt32
+    @State private var codePoint: String = ""
+    @State private var displayChar = Character("\u{200B}")
+    @State private var utf8: UInt32 = 0
+    @State private var numBytes = 0
     private let converter = Converter()
     
-    init() {
-        self.codePoint = ""
-        self.displayChar = " "
-        self.utf8 = 0
-        self.numBytes = 0
-    }
+    init() {}
     
     var body: some View {
         VStack {
@@ -32,15 +27,18 @@ struct ContentView: View {
                         .limitTextLength($codePoint, to: maxLength)
                         .frame(minWidth: 100, maxWidth: 100)
                         .onChange(of: codePoint) {
+                            displayChar = Character("\u{200B}")
+                            utf8 = 0
+                            numBytes = 0
                             converter.setCodePoint(codePoint)
-                            displayChar = Character(converter.getChar() ?? " ")
+                            displayChar = converter.getChar()
                             utf8 = converter.get_utf8()
                             numBytes = converter.getBytesUsed()
                         }
                 } label: {
                     Text("U+")
                 }
-                Text("UTF-8: " + String(utf8, radix: 16) + String(Unicode.Scalar(utf8) ?? " "))
+                Text("UTF-8: " + String(utf8, radix: 16) + " " + String(displayChar))
                 Text("UTF-16: ")
                 Text("Bytes: " + String(numBytes))
             }

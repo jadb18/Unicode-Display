@@ -17,7 +17,7 @@ class Converter {
     private var utf16: UInt32 = 0
     private var codePoint: UInt32 = 0
     private var codePlane: Int = 0
-    private var encodedChar: Unicode.Scalar?
+    private var encodedChar = Character("\u{200B}")
 //    let utf8codec: Unicode.UTF8
     
     init() {}
@@ -54,34 +54,41 @@ class Converter {
         let twoBytes: ClosedRange<UInt32> = 0x0080...0x07FF
         let oneByte: ClosedRange<UInt32> = 0x0000...0x007F
         let continuationByte: UInt8 = 0b1000_0000
+        var byte1: UInt8 = 0
+        var byte2: UInt8 = 0
+        var byte3: UInt8 = 0
+        var byte4: UInt8 = 0
+        
         
         utf8 = 0
         
         if fourBytes.contains(codePoint) {
             bytesUsed = 4
-            let byte1 = (0b111_10000 + UInt8(codePoint >> 18))
-            let byte2 = (continuationByte + UInt8((codePoint & 0x3FFF) >> 12))
-            let byte3 = (continuationByte + UInt8((codePoint & 0x3FF) >> 6))
-            let byte4 = (continuationByte + UInt8(codePoint & 0x3F))
-            // TODO: clean implementation?
-            
-            utf8 = UInt32(byte1) << 24 + UInt32(byte2) << 16 + UInt32(byte3) << 8 + UInt32(byte4)
-            
+            byte1 = (0b1111_0000 + UInt8(codePoint >> 18))
+            byte2 = (continuationByte + UInt8((codePoint & 0x3FFF) >> 12))
+            byte3 = (continuationByte + UInt8((codePoint & 0x3FF) >> 6))
+            byte4 = (continuationByte + UInt8(codePoint & 0x3F))
         } else if threeBytes.contains(codePoint)  {
             bytesUsed = 3
+            byte1 = (0b1110_0000 + UInt8(codePoint >> 12))
+            byte2 = (continuationByte + UInt8((codePoint & 0xFFF) >> 6))
+            byte3 = (continuationByte + UInt8(codePoint & 0x2F))
         } else if twoBytes.contains(codePoint) {
             bytesUsed = 2
-            let bytes = split16BitNum(UInt16(codePoint))
-            let byte1 = (bytes.0 << 3) + (bytes.1 >> 6)
-            let byte2 = bytes.1 & 0x3F
-            utf8 += UInt32(0b1100_0000 + byte1) << UInt8.bitWidth
-            utf8 += UInt32(continuationByte + byte2)
+            byte1 = (continuationByte + UInt8(codePoint >> 6))
+            byte2 = (continuationByte + UInt8(codePoint & 0x2F))
         } else if oneByte.contains(codePoint) {
             bytesUsed = 1
-            utf8 = UInt32(0b1000_0000 + UInt8(codePoint))
+            byte1 = UInt8(codePoint)
         } else {
             print("Invalid code point: \(codePoint)")
+            return
         }
+        
+        let byte1Shift = (bytesUsed - 1) * UInt8.bitWidth
+        let byte2Shift = bytesUsed >= 2 ? ((bytesUsed - 2) * UInt8.bitWidth) : 0
+        let byte3Shift = bytesUsed >= 3 ? ((bytesUsed - 3) * UInt8.bitWidth) : 0
+        utf8 = UInt32(byte1) << byte1Shift + UInt32(byte2) << byte2Shift + UInt32(byte3) << byte3Shift + UInt32(byte4)
     }
     
     func get_utf8() -> UInt32 {
@@ -93,7 +100,7 @@ class Converter {
         return
     }
     
-    func getChar() -> Unicode.Scalar? {
+    func getChar() -> Character {
         return encodedChar
     }
     
@@ -104,7 +111,7 @@ class Converter {
     /// Sets the member `encodedChar` to a Unicide.Scalar, (presumably) simulating valid UTF encoding
     /// - Returns: no return value
     private func setChar() -> Void {
-        encodedChar = Unicode.Scalar(codePoint)
+        encodedChar = Character(Unicode.Scalar(codePoint)!)
         return
     }
     
