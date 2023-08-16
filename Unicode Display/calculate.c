@@ -7,4 +7,6 @@
 
 #include "calculate.h"
 
-char* utf16Hex(char* utf8);
+uint32_t cset_utf16(uint32_t codePoint) {
+    return 0;
+}

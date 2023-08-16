@@ -10,4 +10,6 @@
 
 #include <stdio.h>
 
+uint32_t cset_utf16(uint32_t codePoint);
+
 #endif /* calculate_h */

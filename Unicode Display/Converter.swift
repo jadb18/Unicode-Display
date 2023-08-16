@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct utf8 {
-    
-}
+//struct utf8 {
+//    
+//}
 
 class Converter {
     private var bytesUsed = 0
@@ -42,6 +42,7 @@ class Converter {
             if pointRange.contains(codeHex) {
                 self.codePoint = codeHex
                 set_utf8()
+                set_utf16()
                 setChar()
                 setCodePlane()
             }
@@ -59,7 +60,6 @@ class Converter {
         var byte3: UInt8 = 0
         var byte4: UInt8 = 0
         
-        
         utf8 = 0
         
         if fourBytes.contains(codePoint) {
@@ -72,11 +72,11 @@ class Converter {
             bytesUsed = 3
             byte1 = (0b1110_0000 + UInt8(codePoint >> 12))
             byte2 = (continuationByte + UInt8((codePoint & 0xFFF) >> 6))
-            byte3 = (continuationByte + UInt8(codePoint & 0x2F))
+            byte3 = (continuationByte + UInt8(codePoint & 0x3F))
         } else if twoBytes.contains(codePoint) {
             bytesUsed = 2
             byte1 = (continuationByte + UInt8(codePoint >> 6))
-            byte2 = (continuationByte + UInt8(codePoint & 0x2F))
+            byte2 = (continuationByte + UInt8(codePoint & 0x3F))
         } else if oneByte.contains(codePoint) {
             bytesUsed = 1
             byte1 = UInt8(codePoint)
@@ -88,15 +88,18 @@ class Converter {
         let byte1Shift = (bytesUsed - 1) * UInt8.bitWidth
         let byte2Shift = bytesUsed >= 2 ? ((bytesUsed - 2) * UInt8.bitWidth) : 0
         let byte3Shift = bytesUsed >= 3 ? ((bytesUsed - 3) * UInt8.bitWidth) : 0
-        utf8 = UInt32(byte1) << byte1Shift + UInt32(byte2) << byte2Shift + UInt32(byte3) << byte3Shift + UInt32(byte4)
+        utf8 = UInt32(byte1) << byte1Shift + UInt32(byte2) << byte2Shift
+        utf8 += UInt32(byte3) << byte3Shift + UInt32(byte4)
     }
     
     func get_utf8() -> UInt32 {
         return utf8
     }
     
-    func set_utf16(_ codePoint: String) -> Void {
-        // TODO: convert from utf8 to utf16
+    func set_utf16() -> Void {
+        // Trying C implementation
+        let test: UInt32 = cset_utf16(codePoint)
+        
         return
     }
     
