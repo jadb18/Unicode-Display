@@ -26,7 +26,7 @@ class Converter {
         self.codePoint = UInt32(codePoint)!
     }
     
-    /// Sets the converter's `codePoint` to the input , checks for valid hex code and length
+    /// Sets the converter's `codePoint` to the input, checks for valid hex code and length
     /// - Parameter codePoint: An input codepoint intended to be received from user input
     /// - Returns: no return value
     func setCodePoint(_ codePoint: String) -> Void {
@@ -98,9 +98,12 @@ class Converter {
     
     func set_utf16() -> Void {
         // Trying C implementation
-        let test: UInt32 = cset_utf16(codePoint)
-        
+        utf16 = cset_utf16(codePoint)
         return
+    }
+    
+    func get_utf16() -> UInt32 {
+        return utf16
     }
     
     func getChar() -> Character {

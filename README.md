@@ -12,4 +12,4 @@ Example usage (relatively current state of the program):
 ![Program screenshot displaying the Chinese character *biang* followed by four text fields, input of U+30EDD, UTF-8: f0808b9d, UTF-16: blank, and Bytes: 4](/Resources/U+30EDD%20Sample.png)
 
 ### Crashes discovered so far
-- Attempting to use dictation in the text field causes a crash
+- Attempting to use dictation in the text field sometimes causes a crash but not recently, unsure why.
