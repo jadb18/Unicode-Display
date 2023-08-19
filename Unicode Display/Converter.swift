@@ -12,18 +12,20 @@ import Foundation
 //}
 
 class Converter {
-    private var bytesUsed = 0
+    private var encodedChar = Character("\u{200B}")
+    private var codePoint: UInt32 = 0
     private var utf8: UInt32 = 0
     private var utf16: UInt32 = 0
-    private var codePoint: UInt32 = 0
-    private var codePlane: Int = 0
-    private var encodedChar = Character("\u{200B}")
+    private var utf8BytesUsed = 0
+    private var utf16BytesUsed = 0
+    private var codePlane = 0
 //    let utf8codec: Unicode.UTF8
     
     init() {}
     
-    init(_ encoding: String, _ codePoint: String) {
-        self.codePoint = UInt32(codePoint)!
+    func reset() {
+        encodedChar = Character("\u{200B}")
+        (codePoint, utf8, utf16, utf8BytesUsed, utf16BytesUsed) = (0, 0, 0, 0, 0)
     }
     
     /// Sets the converter's `codePoint` to the input, checks for valid hex code and length
@@ -38,14 +40,21 @@ class Converter {
         
         // Check that the codePoint string can become a hex number/only contains hex characters
         if let codeHex = UInt32(codePoint, radix: 16) {
-            // Check that the hex number is in a valid point range of displayable Unicode characters
-            if pointRange.contains(codeHex) {
-                self.codePoint = codeHex
-                set_utf8()
-                set_utf16()
-                setChar()
-                setCodePlane()
+            // Supposedly can set variables without error
+            self.codePoint = codeHex
+            set_utf8()
+            set_utf16()
+            set_codePlane()
+            // Check that the codePoint is in a valid point range of displayable Unicode characters
+            if pointRange.contains(self.codePoint) {
+                set_char()
+            } else {
+                // Control character/invalid so set to zero width space
+                encodedChar  = Character("\u{200B}")
             }
+        } else {
+            // Not valid codePoint/hex input
+            reset()
         }
     }
     
@@ -63,31 +72,31 @@ class Converter {
         utf8 = 0
         
         if fourBytes.contains(codePoint) {
-            bytesUsed = 4
+            utf8BytesUsed = 4
             byte1 = (0b1111_0000 + UInt8(codePoint >> 18))
             byte2 = (continuationByte + UInt8((codePoint & 0x3FFF) >> 12))
             byte3 = (continuationByte + UInt8((codePoint & 0x3FF) >> 6))
             byte4 = (continuationByte + UInt8(codePoint & 0x3F))
         } else if threeBytes.contains(codePoint)  {
-            bytesUsed = 3
+            utf8BytesUsed = 3
             byte1 = (0b1110_0000 + UInt8(codePoint >> 12))
             byte2 = (continuationByte + UInt8((codePoint & 0xFFF) >> 6))
             byte3 = (continuationByte + UInt8(codePoint & 0x3F))
         } else if twoBytes.contains(codePoint) {
-            bytesUsed = 2
+            utf8BytesUsed = 2
             byte1 = (continuationByte + UInt8(codePoint >> 6))
             byte2 = (continuationByte + UInt8(codePoint & 0x3F))
         } else if oneByte.contains(codePoint) {
-            bytesUsed = 1
+            utf8BytesUsed = 1
             byte1 = UInt8(codePoint)
         } else {
             print("Invalid code point: \(codePoint)")
             return
         }
         
-        let byte1Shift = (bytesUsed - 1) * UInt8.bitWidth
-        let byte2Shift = bytesUsed >= 2 ? ((bytesUsed - 2) * UInt8.bitWidth) : 0
-        let byte3Shift = bytesUsed >= 3 ? ((bytesUsed - 3) * UInt8.bitWidth) : 0
+        let byte1Shift = (utf8BytesUsed - 1) * UInt8.bitWidth
+        let byte2Shift = utf8BytesUsed >= 2 ? ((utf8BytesUsed - 2) * UInt8.bitWidth) : 0
+        let byte3Shift = utf8BytesUsed >= 3 ? ((utf8BytesUsed - 3) * UInt8.bitWidth) : 0
         utf8 = UInt32(byte1) << byte1Shift + UInt32(byte2) << byte2Shift
         utf8 += UInt32(byte3) << byte3Shift + UInt32(byte4)
     }
@@ -99,6 +108,7 @@ class Converter {
     func set_utf16() -> Void {
         // Trying C implementation
         utf16 = cset_utf16(codePoint)
+        utf16BytesUsed = utf16 <= 0xFFFF ? 2 : 4
         return
     }
     
@@ -106,24 +116,32 @@ class Converter {
         return utf16
     }
     
-    func getChar() -> Character {
+    func get_char() -> Character {
         return encodedChar
     }
     
-    func getBytesUsed() -> Int {
-        return bytesUsed
+    func get_utf8Bytes() -> Int {
+        return utf8BytesUsed
+    }
+    
+    func get_utf16Bytes() -> Int {
+        return utf16BytesUsed
     }
     
     /// Sets the member `encodedChar` to a Unicide.Scalar, (presumably) simulating valid UTF encoding
     /// - Returns: no return value
-    private func setChar() -> Void {
-        encodedChar = Character(Unicode.Scalar(codePoint)!)
+    private func set_char() -> Void {
+        if let scalar = Unicode.Scalar(codePoint) {
+            encodedChar = Character(scalar)
+        } else {
+            encodedChar = Character("\u{200B}")
+        }
         return
     }
     
     /// Calculates the code plane from the member code point, not currently used but for inspection purposes
     /// - Returns: no return value
-    private func setCodePlane() -> Void {
+    private func set_codePlane() -> Void {
         let planeBits = codePoint >> 16
         codePlane = Int(planeBits)
         

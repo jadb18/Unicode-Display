@@ -12,7 +12,8 @@ struct ContentView: View {
     @State private var displayChar = Character("\u{200B}")
     @State private var utf8: UInt32 = 0
     @State private var utf16: UInt32 = 0
-    @State private var numBytes = 0
+    @State private var utf8Bytes = 0
+    @State private var utf16Bytes = 0
     private let converter = Converter()
     
     init() {}
@@ -29,21 +30,21 @@ struct ContentView: View {
                         .frame(minWidth: 100, maxWidth: 100)
                         .onChange(of: codePoint) {
                             displayChar = Character("\u{200B}")
-                            utf8 = 0
-                            utf16 = 0
-                            numBytes = 0
                             converter.setCodePoint(codePoint)
-                            displayChar = converter.getChar()
+                            displayChar = converter.get_char()
                             utf8 = converter.get_utf8()
                             utf16 = converter.get_utf16()
-                            numBytes = converter.getBytesUsed()
+                            utf8Bytes = converter.get_utf8Bytes()
+                            utf16Bytes = converter.get_utf16Bytes()
                         }
                 } label: {
                     Text("U+")
                 }
-                Text("UTF-8: " + String(utf8, radix: 16) + " " + String(displayChar))
+                Text("UTF-8: " + String(utf8, radix: 16))
+//                + " " + String(displayChar))
                 Text("UTF-16: " + String(utf16, radix:16))
-                Text("Bytes: " + String(numBytes))
+                Text("UTF-8 Bytes: " + String(utf8Bytes))
+                Text("UTF-16 Bytes: " + String(utf16Bytes))
             }
         }
         .frame(minWidth: 500, maxWidth: 1280, minHeight: 500, maxHeight: 720)

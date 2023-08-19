@@ -28,6 +28,7 @@
 		054779A72A84BFAE00A38C4C /* Resources */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Resources; sourceTree = SOURCE_ROOT; };
 		054779A82A84BFAE00A38C4C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		054779AB2A84C2B200A38C4C /* ConverterHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConverterHelpers.swift; sourceTree = "<group>"; };
+		055A9CF02A8FFB8B00C1030C /* icu4c */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icu4c; path = ../icu/icu4c; sourceTree = "<group>"; };
 		05E9BA6F2A80B8A8000B4EE8 /* Unicode Display-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Unicode Display-Bridging-Header.h"; sourceTree = "<group>"; };
 		05E9BA702A80B8A9000B4EE8 /* calculate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = calculate.h; sourceTree = "<group>"; };
 		05E9BA712A80B8A9000B4EE8 /* calculate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = calculate.c; sourceTree = "<group>"; };
@@ -50,6 +51,7 @@
 			children = (
 				05328DBD2A80B7D20041CA49 /* Unicode Display */,
 				05328DBC2A80B7D20041CA49 /* Products */,
+				055A9CEF2A8FFB8B00C1030C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,6 +88,14 @@
 				05328DC52A80B7D40041CA49 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		055A9CEF2A8FFB8B00C1030C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				055A9CF02A8FFB8B00C1030C /* icu4c */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
