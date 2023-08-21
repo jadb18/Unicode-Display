@@ -9,18 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var codePoint: String = ""
-    @State private var displayChar = Character("\u{200B}")
-    @State private var utf8: UInt32 = 0
-    @State private var utf16: UInt32 = 0
-    @State private var utf8Bytes = 0
-    @State private var utf16Bytes = 0
-    private let converter = Converter()
+    @ObservedObject private var converter = Converter()
+//    @State private var displayChar = Character("\u{200B}")
+//    @State private var utf8: UInt32 = 0
+//    @State private var utf16: UInt32 = 0
+//    @State private var utf8Bytes = 0
+//    @State private var utf16Bytes = 0
     
     init() {}
     
     var body: some View {
         VStack {
-            Text(String(displayChar))
+            Text(String(converter.encodedChar))
                 .font(.system(size: 144))
             VStack {
                 LabeledContent {
@@ -29,22 +29,15 @@ struct ContentView: View {
                         .limitTextLength($codePoint, to: maxLength)
                         .frame(minWidth: 100, maxWidth: 100)
                         .onChange(of: codePoint) {
-                            displayChar = Character("\u{200B}")
                             converter.setCodePoint(codePoint)
-                            displayChar = converter.get_char()
-                            utf8 = converter.get_utf8()
-                            utf16 = converter.get_utf16()
-                            utf8Bytes = converter.get_utf8Bytes()
-                            utf16Bytes = converter.get_utf16Bytes()
                         }
                 } label: {
                     Text("U+")
                 }
-                Text("UTF-8: " + String(utf8, radix: 16))
-//                + " " + String(displayChar))
-                Text("UTF-16: " + String(utf16, radix:16))
-                Text("UTF-8 Bytes: " + String(utf8Bytes))
-                Text("UTF-16 Bytes: " + String(utf16Bytes))
+                Text("UTF-8: " + String(converter.utf8, radix: 16))
+                Text("UTF-16: " + String(converter.utf16, radix:16))
+                Text("UTF-8 Bytes: \(converter.utf8BytesUsed)")
+                Text("UTF-16 Bytes: \(converter.utf16BytesUsed)")
             }
         }
         .frame(minWidth: 500, maxWidth: 1280, minHeight: 500, maxHeight: 720)

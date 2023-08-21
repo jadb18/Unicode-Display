@@ -7,17 +7,13 @@
 
 import Foundation
 
-//struct utf8 {
-//    
-//}
-
-class Converter {
-    private var encodedChar = Character("\u{200B}")
+class Converter: ObservableObject {
+    @Published var encodedChar = Character("\u{200B}")
+    @Published var utf8: UInt32 = 0
+    @Published var utf16: UInt32 = 0
+    @Published var utf8BytesUsed = 0
+    @Published var utf16BytesUsed = 0
     private var codePoint: UInt32 = 0
-    private var utf8: UInt32 = 0
-    private var utf16: UInt32 = 0
-    private var utf8BytesUsed = 0
-    private var utf16BytesUsed = 0
     private var codePlane = 0
 //    let utf8codec: Unicode.UTF8
     
@@ -28,37 +24,43 @@ class Converter {
         (codePoint, utf8, utf16, utf8BytesUsed, utf16BytesUsed) = (0, 0, 0, 0, 0)
     }
     
-    /// Sets the converter's `codePoint` to the input, checks for valid hex code and length
+    /// Sets the converter's `codePoint` to the input, checks for valid hex code and calls the private setter if valid
     /// - Parameter codePoint: An input codepoint intended to be received from user input
     /// - Returns: no return value
     func setCodePoint(_ codePoint: String) -> Void {
 //        let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEF")
 //        let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
-        let controlCharEnd: UInt32 = 0x20
-        let lastCodePoint: UInt32 = 0x10FFFF
-        let pointRange: ClosedRange<UInt32> = controlCharEnd...lastCodePoint
-        
         // Check that the codePoint string can become a hex number/only contains hex characters
         if let codeHex = UInt32(codePoint, radix: 16) {
-            // Supposedly can set variables without error
             self.codePoint = codeHex
-            // Check that the codePoint is in a valid point range of displayable Unicode characters
-            if pointRange.contains(self.codePoint) {
-                set_char()
-                set_utf8()
-                set_utf16()
-                set_codePlane()
-            } else {
-                // Code point is hex characters but not a valid range
-                reset()
-            }
+            setCodePoint(self.codePoint)
         } else {
             // Code point is not hex
             reset()
         }
     }
     
-    func set_utf8() -> Void {
+    
+    /// Checks that `codePoint` is within a valid range of basic code points and calls setters accordingly, otherwise resets variables
+    /// - Returns: <#description#>
+    func setCodePoint(_ codePoint: UInt32) -> Void {
+        let controlCharEnd: UInt32 = 0x20
+        let lastCodePoint: UInt32 = 0x10FFFF
+        let pointRange: ClosedRange<UInt32> = controlCharEnd...lastCodePoint
+        
+        // Check that the codePoint is in a valid point range of displayable Unicode characters
+        if pointRange.contains(codePoint) {
+            set_char()
+            set_utf8()
+            set_utf16()
+            set_codePlane()
+        } else {
+            // Code point is hex characters but not a valid range
+            reset()
+        }
+    }
+    
+    private func set_utf8() -> Void {
         let fourBytes: ClosedRange<UInt32> = 0x10000...0x10FFFF
         let threeBytes: ClosedRange<UInt32> = 0x0800...0xFFFF
         let twoBytes: ClosedRange<UInt32> = 0x0080...0x07FF
@@ -101,31 +103,11 @@ class Converter {
         utf8 += UInt32(byte3) << byte3Shift + UInt32(byte4)
     }
     
-    func get_utf8() -> UInt32 {
-        return utf8
-    }
-    
-    func set_utf16() -> Void {
+    private func set_utf16() -> Void {
         // Trying C implementation
         utf16 = cset_utf16(codePoint)
         utf16BytesUsed = utf16 <= 0xFFFF ? 2 : 4
         return
-    }
-    
-    func get_utf16() -> UInt32 {
-        return utf16
-    }
-    
-    func get_char() -> Character {
-        return encodedChar
-    }
-    
-    func get_utf8Bytes() -> Int {
-        return utf8BytesUsed
-    }
-    
-    func get_utf16Bytes() -> Int {
-        return utf16BytesUsed
     }
     
     /// Sets the member `encodedChar` to a Unicide.Scalar, (presumably) simulating valid UTF encoding
