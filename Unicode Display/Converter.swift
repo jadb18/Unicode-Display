@@ -42,18 +42,18 @@ class Converter {
         if let codeHex = UInt32(codePoint, radix: 16) {
             // Supposedly can set variables without error
             self.codePoint = codeHex
-            set_utf8()
-            set_utf16()
-            set_codePlane()
             // Check that the codePoint is in a valid point range of displayable Unicode characters
             if pointRange.contains(self.codePoint) {
                 set_char()
+                set_utf8()
+                set_utf16()
+                set_codePlane()
             } else {
-                // Control character/invalid so set to zero width space
-                encodedChar  = Character("\u{200B}")
+                // Code point is hex characters but not a valid range
+                reset()
             }
         } else {
-            // Not valid codePoint/hex input
+            // Code point is not hex
             reset()
         }
     }

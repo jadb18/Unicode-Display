@@ -322,5 +322,53 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B22FE93C-1C28-4421-9761-1D72DB2AA49F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Unicode Display/Converter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "setCodePoint(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B22FE93C-1C28-4421-9761-1D72DB2AA49F - 94654b097abab47"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Unicode_Display.Converter.setCodePoint(Swift.String) -&gt; ()"
+                  moduleName = "Unicode Display"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jad/Developer/Unicode%20Display/Unicode%20Display/Converter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46"
+                  offsetFromSymbolStart = "508">
+               </Location>
+               <Location
+                  uuid = "B22FE93C-1C28-4421-9761-1D72DB2AA49F - 94654b097abab47"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Unicode_Display.Converter.setCodePoint(Swift.String) -&gt; ()"
+                  moduleName = "Unicode Display"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jad/Developer/Unicode%20Display/Unicode%20Display/Converter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46"
+                  offsetFromSymbolStart = "516">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
