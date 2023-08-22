@@ -10,13 +10,9 @@ import SwiftUI
 struct ContentView: View {
     @State private var codePoint: String = ""
     @ObservedObject private var converter = Converter()
-//    @State private var displayChar = Character("\u{200B}")
-//    @State private var utf8: UInt32 = 0
-//    @State private var utf16: UInt32 = 0
-//    @State private var utf8Bytes = 0
-//    @State private var utf16Bytes = 0
     
-    init() {}
+    init() {
+    }
     
     var body: some View {
         VStack {

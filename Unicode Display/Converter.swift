@@ -8,11 +8,11 @@
 import Foundation
 
 class Converter: ObservableObject {
-    @Published var encodedChar = Character("\u{200B}")
-    @Published var utf8: UInt32 = 0
-    @Published var utf16: UInt32 = 0
-    @Published var utf8BytesUsed = 0
-    @Published var utf16BytesUsed = 0
+    @Published private(set) var encodedChar = Character("\u{200B}")
+    @Published private(set) var utf8: UInt32 = 0
+    @Published private(set) var utf16: UInt32 = 0
+    @Published private(set) var utf8BytesUsed = 0
+    @Published private(set) var utf16BytesUsed = 0
     private var codePoint: UInt32 = 0
     private var codePlane = 0
 //    let utf8codec: Unicode.UTF8
@@ -39,7 +39,6 @@ class Converter: ObservableObject {
             reset()
         }
     }
-    
     
     /// Checks that `codePoint` is within a valid range of basic code points and calls setters accordingly, otherwise resets variables
     /// - Returns: <#description#>
