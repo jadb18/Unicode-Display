@@ -26,14 +26,14 @@ class Converter: ObservableObject {
     
     /// Sets the converter's `codePoint` to the input, checks for valid hex code and calls the private setter if valid
     /// - Parameter codePoint: An input codepoint intended to be received from user input
-    /// - Returns: no return value
+    /// - Returns: void
     func setCodePoint(_ codePoint: String) -> Void {
 //        let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEF")
 //        let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
         // Check that the codePoint string can become a hex number/only contains hex characters
         if let codeHex = UInt32(codePoint, radix: 16) {
             self.codePoint = codeHex
-            setCodePoint(self.codePoint)
+            setCodePoint()
         } else {
             // Code point is not hex
             reset()
@@ -41,8 +41,8 @@ class Converter: ObservableObject {
     }
     
     /// Checks that `codePoint` is within a valid range of basic code points and calls setters accordingly, otherwise resets variables
-    /// - Returns: <#description#>
-    func setCodePoint(_ codePoint: UInt32) -> Void {
+    /// - Returns: void
+    private func setCodePoint() -> Void {
         let controlCharEnd: UInt32 = 0x20
         let lastCodePoint: UInt32 = 0x10FFFF
         let pointRange: ClosedRange<UInt32> = controlCharEnd...lastCodePoint
@@ -51,6 +51,7 @@ class Converter: ObservableObject {
         if pointRange.contains(codePoint) {
             set_char()
             set_utf8()
+//            utf8 = cset_utf8(self.codePoint)
             set_utf16()
             set_codePlane()
         } else {
@@ -59,11 +60,14 @@ class Converter: ObservableObject {
         }
     }
     
+    /// Sets the converter's utf8 variable based on `self.codePoint`. Only called within the public versions of setCodePoint after
+    /// validating the earlier UI's input code point. Branches for invalid code points just in case.
+    /// - Returns: void
     private func set_utf8() -> Void {
-        let fourBytes: ClosedRange<UInt32> = 0x10000...0x10FFFF
-        let threeBytes: ClosedRange<UInt32> = 0x0800...0xFFFF
-        let twoBytes: ClosedRange<UInt32> = 0x0080...0x07FF
         let oneByte: ClosedRange<UInt32> = 0x0000...0x007F
+        let twoBytes: ClosedRange<UInt32> = 0x0080...0x07FF
+        let threeBytes: ClosedRange<UInt32> = 0x0800...0xFFFF
+        let fourBytes: ClosedRange<UInt32> = 0x10000...0x10FFFF
         let continuationByte: UInt8 = 0b1000_0000
         var byte1: UInt8 = 0
         var byte2: UInt8 = 0
@@ -74,19 +78,19 @@ class Converter: ObservableObject {
         
         if fourBytes.contains(codePoint) {
             utf8BytesUsed = 4
-            byte1 = (0b1111_0000 + UInt8(codePoint >> 18))
-            byte2 = (continuationByte + UInt8((codePoint & 0x3FFF) >> 12))
-            byte3 = (continuationByte + UInt8((codePoint & 0x3FF) >> 6))
-            byte4 = (continuationByte + UInt8(codePoint & 0x3F))
+            byte1 = 0b1111_0000 + UInt8(codePoint >> 18)
+            byte2 = continuationByte + UInt8((codePoint & 0x3FFFF) >> 12)
+            byte3 = continuationByte + UInt8((codePoint & 0xFFF) >> 6)
+            byte4 = continuationByte + UInt8(codePoint & 0x3F)
         } else if threeBytes.contains(codePoint)  {
             utf8BytesUsed = 3
-            byte1 = (0b1110_0000 + UInt8(codePoint >> 12))
-            byte2 = (continuationByte + UInt8((codePoint & 0xFFF) >> 6))
-            byte3 = (continuationByte + UInt8(codePoint & 0x3F))
+            byte1 = 0b1110_0000 + UInt8(codePoint >> 12)
+            byte2 = continuationByte + UInt8((codePoint & 0xFFF) >> 6)
+            byte3 = continuationByte + UInt8(codePoint & 0x3F)
         } else if twoBytes.contains(codePoint) {
             utf8BytesUsed = 2
-            byte1 = (continuationByte + UInt8(codePoint >> 6))
-            byte2 = (continuationByte + UInt8(codePoint & 0x3F))
+            byte1 = continuationByte + UInt8(codePoint >> 6)
+            byte2 = continuationByte + UInt8(codePoint & 0x3F)
         } else if oneByte.contains(codePoint) {
             utf8BytesUsed = 1
             byte1 = UInt8(codePoint)
@@ -123,9 +127,8 @@ class Converter: ObservableObject {
     /// Calculates the code plane from the member code point, not currently used but for inspection purposes
     /// - Returns: no return value
     private func set_codePlane() -> Void {
-        let planeBits = codePoint >> 16
-        codePlane = Int(planeBits)
-        
+        let shift = 16
+        codePlane = Int(codePoint >> shift)
         return
     }
 }
