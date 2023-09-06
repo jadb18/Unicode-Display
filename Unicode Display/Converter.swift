@@ -13,6 +13,7 @@ class Converter: ObservableObject {
     @Published private(set) var utf16: UInt32 = 0
     @Published private(set) var utf8BytesUsed = 0
     @Published private(set) var utf16BytesUsed = 0
+    @Published var cpStr: String = ""
     private var codePoint: UInt32 = 0
     private var codePlane = 0
     let utf8codec: any UnicodeCodec = Unicode.UTF16()
@@ -22,18 +23,16 @@ class Converter: ObservableObject {
     
     func reset() {
         encodedChar = Character("\u{200B}")
-        (codePoint, utf8, utf16, utf8BytesUsed, utf16BytesUsed) = (0, 0, 0, 0, 0)
+        (codePoint, utf8, utf16, utf8BytesUsed, utf16BytesUsed, cpStr) = (0, 0, 0, 0, 0, "")
     }
     
     /// Sets the converter's `codePoint` to the input, checks for valid hex code and calls the private setter if valid
     /// - Parameter codePoint: An input codepoint intended to be received from user input
     /// - Returns: void
     func setCodePoint(_ codePoint: String) -> Void {
-//        let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEF")
-//        let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
         // Check that the codePoint string can become a hex number/only contains hex characters
-        
         if isValidCodePoint(codePoint) {
+            cpStr = codePoint
             set_char()
             set_utf8()
             set_utf16()
@@ -109,8 +108,10 @@ class Converter: ObservableObject {
     
     private func set_utf16() -> Void {
         // Trying C implementation
+        let basic_plane = 2
+        let non_basic = 4
         utf16 = cset_utf16(codePoint)
-        utf16BytesUsed = utf16 <= 0xFFFF ? 2 : 4
+        utf16BytesUsed = utf16 <= 0xFFFF ? basic_plane : non_basic
         return
     }
     
