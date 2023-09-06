@@ -11,8 +11,7 @@ struct ContentView: View {
     @State private var codePoint: String = ""
     @ObservedObject private var converter = Converter()
     
-    init() {
-    }
+    init() {}
     
     var body: some View {
         VStack {

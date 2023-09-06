@@ -15,7 +15,8 @@ class Converter: ObservableObject {
     @Published private(set) var utf16BytesUsed = 0
     private var codePoint: UInt32 = 0
     private var codePlane = 0
-//    let utf8codec: Unicode.UTF8
+    let utf8codec: any UnicodeCodec = Unicode.UTF16()
+//    let test = UTF16
     
     init() {}
     
@@ -31,9 +32,12 @@ class Converter: ObservableObject {
 //        let hexCharacters = CharacterSet(charactersIn: "0123456789ABCDEF")
 //        let allHex: Bool = codePoint.uppercased().rangeOfCharacter(from: hexCharacters) != nil
         // Check that the codePoint string can become a hex number/only contains hex characters
-        if let codeHex = UInt32(codePoint, radix: 16) {
-            self.codePoint = codeHex
-            setCodePoint()
+        
+        if isValidCodePoint(codePoint) {
+            set_char()
+            set_utf8()
+            set_utf16()
+            set_codePlane()
         } else {
             // Code point is not hex
             reset()
@@ -42,22 +46,19 @@ class Converter: ObservableObject {
     
     /// Checks that `codePoint` is within a valid range of basic code points and calls setters accordingly, otherwise resets variables
     /// - Returns: void
-    private func setCodePoint() -> Void {
+    private func isValidCodePoint(_ codePoint: String) -> Bool {
         let controlCharEnd: UInt32 = 0x20
         let lastCodePoint: UInt32 = 0x10FFFF
         let pointRange: ClosedRange<UInt32> = controlCharEnd...lastCodePoint
+        var isValid = false
         
-        // Check that the codePoint is in a valid point range of displayable Unicode characters
-        if pointRange.contains(codePoint) {
-            set_char()
-            set_utf8()
-//            utf8 = cset_utf8(self.codePoint)
-            set_utf16()
-            set_codePlane()
-        } else {
-            // Code point is hex characters but not a valid range
-            reset()
+        if let codeHex = UInt32(codePoint, radix: 16) {
+            if pointRange.contains(codeHex) {
+                self.codePoint = codeHex
+                isValid = true
+            }
         }
+        return isValid
     }
     
     /// Sets the converter's utf8 variable based on `self.codePoint`. Only called within the public versions of setCodePoint after

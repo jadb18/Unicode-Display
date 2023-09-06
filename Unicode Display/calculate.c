@@ -38,16 +38,16 @@ uint32_t cset_utf16(uint32_t codePoint) {
 /// Checks which byte range the code point would fall in and constructs each byte according to the UTF-8 encoding process.
 /// - Parameter codePoint: A 32-bit value representing a unicode code point
 uint32_t cset_utf8(uint32_t codePoint) {
-    uint32_t utf8 = 0;
     int oneByte = 0x007F;
     int twoBytes = 0x07FF;
     int threeBytes = 0xFFFF;
     int fourBytes = 0x10FFFF;
+    int byte1 = 0;
+    int byte2 = 0;
+    int byte3 = 0;
+    int byte4 = 0;
+    uint32_t utf8 = 0;
     uint8_t continuationByte = 0b10000000;
-    uint8_t byte1 = 0;
-    uint8_t byte2 = 0;
-    uint8_t byte3 = 0;
-    uint8_t byte4 = 0;
     
     if (codePoint <= fourBytes) {
         if (codePoint <= threeBytes) {
@@ -69,6 +69,8 @@ uint32_t cset_utf8(uint32_t codePoint) {
     } else {
         printf("Invalid code point %d", codePoint);
     }
+    
+    utf8 = (byte1 << 24) + (byte2 << 16) + (byte3 << 8) + byte1;
     
     return utf8;
 }
