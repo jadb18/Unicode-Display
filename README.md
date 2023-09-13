@@ -12,11 +12,13 @@ Intended to work with UTF-8 and UTF-16 encodings, and I would like to implement 
 
 ### Iterative examples
 
-The Playing Cards block — Only of these characters is an emoji!
-![Example of a speedy interation through the Playing Cards block as the code points and bytes update](/Resources/Units%20Example.gif)
+#### The Playing Cards block — Only of these characters is an emoji!
 
-CJK Compatibility Units
-![Example of a speedy iteration through the CJK Compatibility block as the code points and bytes update](/Resources/Units%20Example.gif)
+![Example of a speedy interation through the Playing Cards block as the code points and bytes update](/Resources/Playing%20Cards.gif)
+  
+#### CJK Compatibility Units
+
+![Example of a speedy iteration through the CJK Compatibility block as the code points and bytes update](/Resources/CJK%20Compatibility%20Units.gif)
 
 ### Crashes discovered so far
 ~~Attempting to use dictation in the text field sometimes causes a crash but not recently, unsure why (currently Swift Version 5.9 on macOS 14 beta 5)~~
