@@ -4,7 +4,9 @@ This program accepts entry of a Unicode code point and displays the correspondin
 
 ## Overview
 
- Anything in the Unicode Character Database (UCD) can be represented, as is still possible to view the encodings for characters in other languages even if a necessary font is not installed to display the characters. As an example, the Traditional Chinese glyph for *biáng*, shown below, exists as of Unicode version 15.1, but not yet in many system fonts, so the glyph would appear as a blank or "�". I used a custom font to display it in the application.
+ Anything in the Unicode Character Database (UCD) can be represented, as it is still possible to view the encodings for characters from uninstalled languages or even if a necessary font is not installed to display the characters.
+ 
+ As an example, the Simplified Chinese character for *biáng*, shown below, exists as of Unicode version 15.1, but not yet in many system fonts, so the glyph would appear as a blank or "�". I used the [BabelStone Han font](https://www.babelstone.co.uk/Fonts/Han.html) to display the glpyh in the application.
 
 ![Chinese character for biáng with codepoint 30edd with UTF eight and sixteen encodings and byte size](/Resources/U+30EDD%20Example.png)
 
