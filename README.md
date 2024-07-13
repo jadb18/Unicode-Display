@@ -12,9 +12,11 @@ This program accepts entry of a Unicode code point and displays the correspondin
 
 ### Example usage (relatively current state of the program):
 U+1 and U+1F are control characters representing headings and delimeters, so they have no visual representation besides caret notation.
+
 ![Example showing the codepoint 1f312 being input one character at a time to generate the hatching chick emoji](/Resources/Example%20Usage.gif)
 
 ### Iterative examples
+
 
 #### CJK Compatibility Units
 
